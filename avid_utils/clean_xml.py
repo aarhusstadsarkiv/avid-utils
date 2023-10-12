@@ -29,8 +29,8 @@ class ContentHandlerTrim(ContentHandler):
         self.handle.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
 
     def startElement(self, name: str, attrs: AttributesImpl):
+        self.current_tag_is_col = self.current_tag in ("row", None) and _col_name.match(name) is not None
         self.current_tag = name
-        self.current_tag_is_col = _col_name.match(name) is not None
         if not self.current_tag_is_col:
             attrs_string: str = " ".join(f'{n}={quoteattr(v)}' for n, v in attrs.items())
             self.handle.write(f"<{name} {attrs_string}".strip() + ">")
@@ -47,7 +47,7 @@ class ContentHandlerTrim(ContentHandler):
             else:
                 self.handle.write(f'<{name} xsi:nil="true"/>')
         else:
-            self.handle.write(f'{escape(self.current_content, _escape_entities)}</{name}>')
+            self.handle.write(f'{escape(self.current_content, _escape_entities).strip(_whitespace)}</{name}>')
 
         self.current_tag = None
         self.current_tag_is_col = False
