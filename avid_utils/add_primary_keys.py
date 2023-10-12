@@ -4,7 +4,7 @@ from typing import Optional
 from xmltodict import parse as parse_xml
 from xmltodict import unparse as unparse_xml
 
-from .utils import print_clear
+from .utils import clear_line
 from .utils import print_log
 
 
@@ -73,7 +73,7 @@ def main(archive: Path, log_file: Path):
         table_folder: Path = archive.joinpath("tables", table["folder"][0])
         column_index: int = len(table["columns"][0]["column"]) + 1
 
-        clear, _ = print_clear(f"{archive.name}/{table['folder'][0]}/adding key... ", end="", flush=True)
+        print(f"{archive.name}/{table['folder'][0]}/adding key... ", end="", flush=True)
 
         xml_path: Path = table_folder.joinpath(table["folder"][0]).with_suffix(".xml")
         xml_path_tmp = table_xml_add_key(xml_path, index, column_index, xml_path.with_name("." + xml_path.name))
@@ -103,7 +103,7 @@ def main(archive: Path, log_file: Path):
         with tables_index_path.open("wb") as fh:
             unparse_xml(tables_index, fh, "utf-8")
 
-        clear()
+        clear_line()
         echo(f'{archive.name}/{table["folder"][0]}/added '
              f'{table["columns"][0]["column"][-1]["columnID"][0]} '
              f'{table["primaryKey"][0]["column"][0]}')
