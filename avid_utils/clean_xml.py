@@ -1,6 +1,7 @@
 from pathlib import Path
 from re import Pattern
 from re import compile as re_compile
+from typing import Optional
 from typing import TextIO
 from xml.sax import ContentHandler
 from xml.sax import parse as sax_parse
@@ -20,7 +21,7 @@ class ContentHandlerTrim(ContentHandler):
     def __init__(self, file_handle: TextIO):
         super().__init__()
         self.handle: TextIO = file_handle
-        self.current_tag: str | None = None
+        self.current_tag: Optional[str] = None
         self.current_tag_is_col: bool = False
         self.current_content: str = ""
 

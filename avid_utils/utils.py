@@ -1,16 +1,13 @@
 from datetime import datetime
 from pathlib import Path
 from shutil import get_terminal_size
-from sys import stdout
-from typing import Callable
 from typing import Optional
-from typing import TextIO
 
 from click import Context
 from click import Parameter
 
 
-def get_parameter(ctx: Context, param_name: str) -> Parameter | None:
+def get_parameter(ctx: Context, param_name: str) -> Optional[Parameter]:
     return next((p for p in ctx.command.params if p.name == param_name), None)
 
 
