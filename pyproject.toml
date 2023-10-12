@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "avid-utils"
+version = "0.7.0"
+description = "Enables easy comparison of original files to ets converted master copies"
+authors = ["Aarhus Stadsarkiv <stadsarkiv@aarhus.dk>"]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+xmltodict = "^0.13.0"
+click = "^8.1.7"
+
+[tool.poetry.scripts]
+avid-utils = "avid_utils.__main__:app"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
