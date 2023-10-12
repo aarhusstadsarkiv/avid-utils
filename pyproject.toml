@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "avid-utils"
-version = "0.7.0"
+version = "0.1.0"
 description = "Enables easy comparison of original files to ets converted master copies"
 authors = ["Aarhus Stadsarkiv <stadsarkiv@aarhus.dk>"]
 
