@@ -13,11 +13,12 @@ from click import pass_context
 from .add_primary_keys import main as primary_keys
 from .clean_empty_columns import clean_sqlite as remove_empty_columns_sqlite
 from .clean_empty_columns import clean_xml as remove_empty_columns_xml
-from .utils import get_parameter
+from .clean_xml import main as remove_whitespace
+from .remove_control_characters import main as remove_control_characters
 from .remove_duplicate_rows import main as remove_duplicate_rows
 from .remove_tables import main as remove_tables
-from .remove_control_characters import main as remove_control_characters
-from .clean_xml import main as remove_whitespace
+from .search_encoded_db import main as search_encoded_db
+from .utils import get_parameter
 
 path_exists = ClickPath(exists=True, writable=True)
 path_folder = ClickPath(exists=True, file_okay=False, writable=True, resolve_path=True, path_type=Path)
@@ -133,3 +134,6 @@ def app_remove_whitespace(_ctx: Context, file: tuple[Path], keep: bool, log_file
     """
     for path in file:
         remove_whitespace(path, keep, log_file)
+
+
+app.add_command(search_encoded_db)
