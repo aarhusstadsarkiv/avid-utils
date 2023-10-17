@@ -97,12 +97,12 @@ def app_remove_tables(ctx: Context, archive: Path, tables: tuple[str, ...], empt
 @commit_option
 @log_option
 @pass_context
-def app_remove_duplicate_rows(_ctx: Context, file: Path, commit: bool, log_file: Path):
+def app_remove_duplicate_rows(_ctx: Context, database: Path, commit: bool, log_file: Path):
     """
     Remove duplicate rows from a SQLite DATABASE.
     """
 
-    return remove_duplicate_rows(file, commit, log_file)
+    return remove_duplicate_rows(database, commit, log_file)
 
 
 @app.command("remove-control-characters")
