@@ -8,6 +8,7 @@ authors = ["Aarhus Stadsarkiv <stadsarkiv@aarhus.dk>"]
 python = ">=3.9"
 xmltodict = "^0.13.0"
 click = "^8.1.7"
+orjson = "^3.9.9"
 
 [tool.poetry.scripts]
 avid-utils = "avid_utils.cli:app"
