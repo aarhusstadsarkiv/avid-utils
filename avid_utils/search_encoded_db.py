@@ -93,12 +93,12 @@ class Header:
 
 
 def get_columns(conn: Connection, table: str) -> list[ColInfo]:
-    return [ColInfo(*c) for c in conn.execute(f"pragma table_info({table})").fetchall()]
+    return [ColInfo(*c) for c in conn.execute(f'pragma table_info("{table}")').fetchall()]
 
 
 # noinspection SqlNoDataSourceInspection,SqlResolve
 def count_rows(conn: Connection, table: str, sample: Optional[int]) -> int:
-    rows: int = conn.execute(f"select count(*) from {table}").fetchone()[0]
+    rows: int = conn.execute(f'select count(*) from "{table}"').fetchone()[0]
     return min(sample, rows) if sample else rows
 
 
@@ -115,7 +115,7 @@ def encode_table_column(value: Any, type_byte: bytes, hash_algorithm: str, prese
 def encode_table_rows(conn: Connection, table: str, hash_algorithm: str, preserve_types: bool, sample: Optional[int]
                       ) -> Generator[bytes, None, None]:
     columns: list[ColInfo] = get_columns(conn, table)
-    sql: str = f"select * from {table} limit {sample}" if sample else f"select * from {table}"
+    sql: str = f'select * from "{table}" limit "{sample}"' if sample else f'select * from "{table}"'
 
     return (
         encode_table_column(row[col.cid], col.byte_type, hash_algorithm, preserve_types)

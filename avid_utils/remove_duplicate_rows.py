@@ -7,17 +7,17 @@ from .utils import print_log
 
 
 def has_primary_keys(conn: Connection, table: str) -> bool:
-    return any(c[5] for c in conn.execute(f"pragma table_info({table})").fetchall())
+    return any(c[5] for c in conn.execute(f'pragma table_info("{table}")').fetchall())
 
 
 # noinspection SqlNoDataSourceInspection
 def count_rows(conn: Connection, table: str) -> int:
-    return conn.execute(f"select count(ROWID) from {table}").fetchone()[0]
+    return conn.execute(f'select count(ROWID) from "{table}"').fetchone()[0]
 
 
 # noinspection SqlNoDataSourceInspection
 def count_unique_rows(conn: Connection, table: str) -> int:
-    return conn.execute(f"select count(*) from (select distinct * from {table})").fetchone()[0]
+    return conn.execute(f'select count(*) from (select distinct * from "{table}")').fetchone()[0]
 
 
 # noinspection SqlNoDataSourceInspection
@@ -28,9 +28,9 @@ def remove_duplicates(conn: Connection, table: str):
     while table_tmp in tables:
         table_tmp = "_" + table_tmp
 
-    conn.execute(f"create table {table_tmp} as select distinct * from {table}")
-    conn.execute(f"drop table {table}")
-    conn.execute(f"alter table {table_tmp} rename to {table}")
+    conn.execute(f'create table "{table_tmp}" as select distinct * from "{table}"')
+    conn.execute(f'drop table "{table}"')
+    conn.execute(f'alter table "{table_tmp}" rename to "{table}"')
 
 
 def main(file: Path, commit: bool, log_file: Path):

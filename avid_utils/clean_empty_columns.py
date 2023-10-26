@@ -30,7 +30,7 @@ def sqlite_get_columns(conn: Connection, table: str) -> list[str]:
     """
     Get the names of all the columns in a table that are not primary keys.
     """
-    return [c[1] for c in conn.execute(f"pragma table_info({table})").fetchall() if not c[5]]
+    return [c[1] for c in conn.execute(f'pragma table_info("{table}")').fetchall() if not c[5]]
 
 
 # noinspection SqlNoDataSourceInspection,SqlResolve
@@ -39,7 +39,7 @@ def sqlite_has_value(conn: Connection, table: str, column: str) -> bool:
     Check if any row in the table has a non-empty value in a specific column.
     """
     return conn.execute(
-        f"select {column} from {table} where {column} is not null and {column} != '' limit 1"
+        f'select "{column}" from "{table}" where "{column}" is not null and "{column}" != \'\' limit 1'
     ).fetchone() is not None
 
 
@@ -48,7 +48,7 @@ def sqlite_drop_column(conn: Connection, table: str, column: str):
     """
     Drop a column from a table.
     """
-    return conn.execute(f"alter table {table} drop column {column}")
+    return conn.execute(f'alter table "{table}" drop column "{column}"')
 
 
 # noinspection SqlNoDataSourceInspection,SqlResolve
@@ -56,7 +56,7 @@ def sqlite_drop_table(conn: Connection, table: str):
     """
     Drop a table from a database.
     """
-    return conn.execute(f"drop table {table}")
+    return conn.execute(f'drop table "{table}"')
 
 
 def table_index_update(path: Path, remove_columns: list[tuple[int, set[str]]], remove_tables: list[int],
