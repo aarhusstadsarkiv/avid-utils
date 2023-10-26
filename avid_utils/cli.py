@@ -19,7 +19,7 @@ from .remove_tables import main as remove_tables
 from .remove_control_characters import main as remove_control_characters
 from .clean_xml import main as remove_whitespace
 
-path_exists = ClickPath(exists=True, writable=True)
+path_exists = ClickPath(exists=True, writable=True, path_type=Path)
 path_folder = ClickPath(exists=True, file_okay=False, writable=True, resolve_path=True, path_type=Path)
 path_file = ClickPath(exists=True, dir_okay=False, writable=True, resolve_path=True, path_type=Path)
 path_file_not_exists = ClickPath(exists=False, dir_okay=False, writable=True, resolve_path=True, path_type=Path)
@@ -50,20 +50,18 @@ def app_primary_keys(_ctx: Context, archive: Path, log_file: Path):
 @commit_option
 @log_option
 @pass_context
-def app_remove_empty_columns(_ctx: Context, archive_type: str, archive: tuple, commit: bool, log_file: Path):
+def app_remove_empty_columns(_ctx: Context, archive_type: str, archive: Path, commit: bool, log_file: Path):
     """
-    Take a list of databases or archive folders and check each table
-    for empty columns (all values either null or ''). Completely empty
+    Remove empty columns (all values either null or '') from an archive or SQLite database. Completely empty
     tables will also be removed.
 
     Empty columns are removed only if the '--commit' option is used and are otherwise ignored.
     """
 
-    for path in archive:
-        if archive_type == "archive":
-            remove_empty_columns_xml(path, commit, log_file)
-        elif archive_type == "sqlite":
-            remove_empty_columns_sqlite(path, commit, log_file)
+    if archive_type == "archive":
+        remove_empty_columns_xml(archive, commit, log_file)
+    elif archive_type == "sqlite":
+        remove_empty_columns_sqlite(archive, commit, log_file)
 
 
 @app.command("remove-tables")
