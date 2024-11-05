@@ -207,7 +207,7 @@ class Database:
 
     def table_offset_start(self, table: str, row: int = 0, column: int = 0) -> int:
         table_info: TableInfo = self.tables[table.lower()]
-        table_index: int = [t.name.lower() for t in self.header.tables].index(table_info.name)
+        table_index: int = [t.name.lower() for t in self.header.tables].index(table_info.name.lower())
         offset_tables: list[TableInfo] = self.header.tables[:table_index]
         rows_offset: int = sum((self.table_size(t.name) for t in offset_tables), 0)
         rows_offset += row * len(table_info.columns) * self.hash_length
