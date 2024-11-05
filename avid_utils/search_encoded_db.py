@@ -129,7 +129,7 @@ def encode_table_rows(
 
 # noinspection SqlNoDataSourceInspection,SqlResolve
 def encode_database(conn: Connection, file: Path, hash_algorithm: str, preserve_types: bool, sample: Optional[int]):
-    tables: list[str] = [t.lower() for [t] in conn.execute("select name from sqlite_master where type = 'table'")]
+    tables: list[str] = [t for [t] in conn.execute("select name from sqlite_master where type = 'table'")]
 
     header: Header = Header(hash_algorithm=hash_algorithm, tables=[], preserve_types=preserve_types)
 
@@ -206,7 +206,7 @@ class Database:
 
     def table_offset_start(self, table: str, row: int = 0, column: int = 0) -> int:
         table_info: TableInfo = self.tables[table.lower()]
-        table_index: int = [t.name for t in self.header.tables].index(table_info.name)
+        table_index: int = [t.name.lower() for t in self.header.tables].index(table_info.name)
         offset_tables: list[TableInfo] = self.header.tables[:table_index]
         rows_offset: int = sum((self.table_size(t.name) for t in offset_tables), 0)
         rows_offset += row * len(table_info.columns) * self.hash_length
@@ -254,7 +254,7 @@ def print_aggregated_results(results: list[tuple[TableInfo, list[int]]]):
 
 
 def sort_results(output: list[tuple[TableInfo, list[int]]]) -> list[tuple[TableInfo, list[int]]]:
-    return sorted(output, key=lambda r: (r[0].name, min(r[1])))
+    return sorted(output, key=lambda r: (r[0].name.lower(), min(r[1])))
 
 
 def find_value_in_region(
@@ -318,11 +318,11 @@ def find_values_in_region(
 def find_value_parent(
         db: Database, value_hash: bytes, exclude: list[str], max_results: int
 ) -> list[tuple[TableInfo, list[int]]]:
-    exclude = exclude or []
+    exclude = [e.lower() for e in exclude or []]
     output: list[tuple[TableInfo, list[int]]] = []
 
     for table in db.header.tables:
-        if table.name in exclude:
+        if table.name.lower() in exclude:
             continue
         table_output = find_value_in_region(
             db.file, value_hash, table, db.table_offset_start(table.name),
@@ -337,11 +337,11 @@ def find_value_parent(
 def find_values_parent(
         db: Database, value_hashes: set[bytes], exclude: list[str], max_results: int
 ) -> list[tuple[TableInfo, list[int]]]:
-    exclude = exclude or []
+    exclude = [e.lower() for e in exclude or []]
     output: list[tuple[TableInfo, list[int]]] = []
 
     for table in db.header.tables:
-        if table.name in exclude:
+        if table.name.lower() in exclude:
             continue
         table_output = find_values_in_region(
             db.file, value_hashes, table, db.table_offset_start(table.name),
