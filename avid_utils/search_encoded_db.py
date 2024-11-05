@@ -26,6 +26,7 @@ from orjson import dumps
 from orjson import loads
 
 sql_types_int: dict[str, int] = {
+    "": 1,
     "int": 0,
     "integer": 0,
     "text": 1,
