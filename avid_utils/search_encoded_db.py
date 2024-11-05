@@ -6,6 +6,8 @@ from hashlib import algorithms_available
 from hashlib import new as new_hash
 from json import loads
 from pathlib import Path
+from re import IGNORECASE
+from re import Pattern, compile as re_compile
 from sqlite3 import Connection
 from struct import calcsize
 from struct import pack
@@ -34,6 +36,9 @@ sql_types_int: dict[str, int] = {
     "real": 3,
     "numeric": 4,
 }
+
+
+exclude_tables_pattern: Pattern[str] = re_compile(r"^sqlite_stat\d*$", IGNORECASE)
 
 
 @dataclass
@@ -131,7 +136,10 @@ def encode_table_rows(
 
 # noinspection SqlNoDataSourceInspection,SqlResolve
 def encode_database(conn: Connection, file: Path, hash_algorithm: str, preserve_types: bool, sample: Optional[int]):
-    tables: list[str] = [t for [t] in conn.execute("select name from sqlite_master where type = 'table'")]
+    tables: list[str] = [
+        t for [t] in conn.execute("select name from sqlite_master where type = 'table'")
+        if not exclude_tables_pattern.match(t)
+    ]
 
     header: Header = Header(hash_algorithm=hash_algorithm, tables=[], preserve_types=preserve_types)
 
